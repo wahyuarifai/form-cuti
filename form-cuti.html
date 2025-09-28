@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Form Cuti Karyawan</title>
   <style>
     body {
@@ -30,7 +30,7 @@
   <label for="nik">Masukkan NIK:</label>
   <input type="text" id="nik" placeholder="Contoh: 2012022847" />
 
-  <button onclick="cekNIK()">Cek Nama</button>
+  <button onclick="cekNIK()">Cek Nama & Group Jadwal</button>
 
   <div id="hasil"></div>
 
@@ -38,46 +38,46 @@
 
   <script>
     async function cekNIK() {
-      const nik = document.getElementById("nik").value.trim();
-      const hasil = document.getElementById("hasil");
-      const btnForm = document.getElementById("formCutiBtn");
+      const nik = document.getElementById('nik').value.trim();
+      const hasil = document.getElementById('hasil');
+      const btnForm = document.getElementById('formCutiBtn');
 
       if (!nik) {
-        hasil.innerText = "⚠️ Silakan masukkan NIK.";
-        btnForm.style.display = "none";
+        hasil.textContent = "⚠️ Silakan masukkan NIK.";
+        btnForm.style.display = 'none';
         return;
       }
 
-      hasil.innerText = "🔄 Mencari nama...";
-      btnForm.style.display = "none";
+      hasil.textContent = "🔄 Mencari data...";
+      btnForm.style.display = 'none';
 
       try {
-        // Ganti dengan URL Web App kamu
         const response = await fetch(`https://script.google.com/macros/s/AKfycbxnO1U_DSWwwYKi0RsFbBq-PYiK-xkum8LJbLyYINrFrb1W8Rap7-ogJz9CvV6TsqQA/exec?nik=${nik}`);
         const data = await response.json();
 
-        if (data.nama) {
-          hasil.innerHTML = `✅ Nama ditemukan: <strong>${data.nama}</strong>`;
-          btnForm.style.display = "inline-block";
+        if (data.nama && data.shift) {
+          hasil.innerHTML = `✅ Nama: <strong>${data.nama}</strong><br>🕑 Group Jadwal: <strong>${data.shift}</strong>`;
+          btnForm.style.display = 'inline-block';
           btnForm.dataset.nama = data.nama;
           btnForm.dataset.nik = nik;
+          btnForm.dataset.shift = data.shift;
         } else {
-          hasil.innerText = "❌ NIK tidak ditemukan di database.";
+          hasil.textContent = "❌ NIK tidak ditemukan di database.";
         }
-      } catch (err) {
-        hasil.innerText = "❌ Gagal mengambil data.";
-        console.error(err);
+      } catch (error) {
+        hasil.textContent = "❌ Gagal mengambil data.";
+        console.error(error);
       }
     }
 
     function lanjutForm() {
-      const btn = document.getElementById("formCutiBtn");
+      const btn = document.getElementById('formCutiBtn');
       const nama = encodeURIComponent(btn.dataset.nama);
       const nik = encodeURIComponent(btn.dataset.nik);
+      const shift = encodeURIComponent(btn.dataset.shift);
 
-      // Link Google Form dan entry ID yang sudah kamu berikan
       const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSeoJsdvN7htQSgUjDbT6I5StR1y0zLyFXM46-ZuLvO80D89bQ/viewform";
-      const prefillURL = `${formURL}?entry.448590851=${nik}&entry.1346383944=${nama}`;
+      const prefillURL = `${formURL}?entry.448590851=${nik}&entry.1346383944=${nama}&entry.1841657487=${shift}`;
 
       window.location.href = prefillURL;
     }
